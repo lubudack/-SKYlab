@@ -29,7 +29,7 @@ import os, random, time
 
 client = discord.Client()
 
-Bot = koreanbots.Client(client, 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjczNjEzNTY3Mjg0MjQyMDMyNiIsImlhdCI6MTU5NjE3NTM1OCwiZXhwIjoxNjI3NzMyOTU4fQ.G5E9ESHJ-JmedumZCZP7-dAhj5d9M28s3ZBGjU8dsuBqX6V3tyrflO0lBrnQnr7QiKj5ie2n2h0_DAH3R6kI_Dp1EuaXpozC6PJd7AOS8fDNQSfIppCULDl3jxkySO5OptkWmF0YUm0G0qRBdbzo-J30hBY386eWWCf59ExNnWE')
+Bot = koreanbots.Client(client, 'KoreanbotsToken')
 
 
 req = Request("http://owapi.io/profile/pc/asia/Kirito7416-3341", headers={'User-Agent': 'Mozilla/5.0'})
