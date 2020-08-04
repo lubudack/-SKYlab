@@ -128,4 +128,4 @@ async def on_message(message):
             f.write(str(idA[i])+","+str(moneyA[i])+","+str(timeA[i])+"\n")
         f.close()
 
-client.run("NzM2MTM1NjcyODQyNDIwMzI2.XxqZxQ.51VkufvvzSJHtkKJcQd7ZUsQYnY")
+client.run("Token")
