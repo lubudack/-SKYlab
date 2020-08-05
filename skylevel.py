@@ -13,10 +13,12 @@ async def on_message(message):
         i = 1
         while True:
             if sheet["A" + str(i)].value == str(message.author.id):
-                sheet["B" + str(i)].value = sheet["B" + str(i)].value + 1
+                sheet["B" + str(i)].value = sheet["B" + str(i)].value + 2
                 if sheet["B" + str(i)].value >= exp[sheet["C" + str(i)].value - 1]:
                     sheet["C" + str(i)].value = sheet["C" + str(i)].value + 1
-                    await message.channel.send("레벨이 올랐어요! \n 현재 레벨 - " + str(sheet["C" + str(i)].value) + "\n 현재 경험치 - " + str(sheet["B" + str(i)].value))
+                    embed = discord.Embed(title="레벨업!", description="현재 레벨 : " + str(sheet["C" + str(i)].value) + "레벨 \n 현재 경험치 : " + str(sheet["B" + str(i)].value) + "XP")
+                    embed.set_footer(text="레벨은 강제로 삭제할 수 없어요!")
+                    await message.channel.send(embed=embed)
                 file.save('레벨.xlsx')
                 break
 
