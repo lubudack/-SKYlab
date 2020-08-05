@@ -248,18 +248,22 @@ async def on_message(message):
         embed.set_footer(text=message.author.name + " | Sky BOT#2208  스카이봇은 2명이 개발하고 있어요!", icon_url=message.author.avatar_url)
         await message.channel.send(embed=embed)
 
-    if message.content.startswith("/내정보"):
-        date = datetime.datetime.utcfromtimestamp(((int(message.author.id) >> 22) + 1420070400000) / 1000)
-        embed = discord.Embed(title="기본 정보",
-        colour=discord.Colour.magenta()
-        )
-        embed.add_field(name="닉네임, 태그", value=f"{message.author}", inline=False)
-        embed.add_field(name="ID", value=f"{message.author.id}", inline=False)
-        embed.add_field(name="Discord 가입일", value=str(date.year) + "년 " + str(date.month) + "월 " + str(date.day) + "일 ", inline=False)
-        embed.add_field(name="해당서버에서의 닉네임", value=message.author.display_name, inline=False)
-        embed.add_field(name="현재 있는 서버", value=f"{message.guild.name}", inline=False)
+    if message.content == '/내정보':
+        print(f'{message.guild.name}/{message.author} ('+ f'{message.author.id}) : {message.content}')
+        roles=[role for role in message.author.roles]
+        embed=discord.Embed(colour=message.author.color, timestamp=message.created_at)
+        embed.set_author(name=f"{message.author}님의 정보!")
         embed.set_thumbnail(url=message.author.avatar_url)
-        embed.set_footer(text="오류 발생시 /피드백!")
+        embed.set_footer(text=f"{message.author}님에 의해 제공되었어요!", icon_url=message.author.avatar_url)
+        embed.add_field(name="ID", value=message.author.id, inline = False)
+        embed.add_field(name="닉네임", value=message.author.display_name,  inline = False)
+        embed.add_field(name="계정 생성 시간", value=message.author.created_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"), inline = False)
+        embed.add_field(name="가입 시간", value=message.author.joined_at.strftime("%a, %#d %B %Y, %I:%M %p UTC"), inline = False)
+        embed.add_field(name=f"소유한 역할 ({len(roles)})", value=" ".join([role.mention for role in roles]), inline = False)
+        embed.add_field(name="가장 높은등급인 역할", value=message.author.top_role.mention,  inline = False)
+        embed.add_field(name ="상태", value =message.author.status, inline = False)
+        if 'Custom Status' in str(message.author.activity):
+            embed.add_field(name = '하는 게임', value = message.author.activity.state, inline = False)
         await message.channel.send(embed=embed)
 
     if message.content.startswith("/계산"):
@@ -384,7 +388,8 @@ async def on_message(message):
         colour = discord.Colour.dark_teal()    
     )
         embed.add_field(name="/배워 [ A ] [ B ]", value="[ A ] 를 말하면 [ B ] 로 대답하게 가르칩니다! \n ex ) /배워 안녕 반가워요!", inline=False)
-        embed.add_field(name="/말해 [ A ]", value="/배워 로 가르쳤던 내용의 [ A ] 를 적으면 [ B ] 가 나옵니다! \n ex ) /말해 안녕", inline=False)
+        embed.add_field(name="카이야 [ A ]", value="/배워 로 가르쳤던 내용의 [ A ] 를 적으면 [ B ] 가 나옵니다! \n ex ) /말해 안녕", inline=False)
+        embed.add_field(name="/잊어 [ A ]", value="/배워 로 가르쳤던 내용의 [ A ] 를 적으면 해당 기억을 잊어버립니다. \n ※ 해당 명령어를 사용하면 다시 추가하기 전까지 삭제됩니다.")
         embed.add_field(name="/기억초기화, /기억 초기화", value="[ Owner 전용 ] 모든 기억을 초기화합니다.")
         await message.channel.send(embed=embed)
 
@@ -652,7 +657,7 @@ async def on_message(message):
         hours = uptime[0]
         minitues = uptime[1]
         seconds = uptime[2].split(".")[0]
-        embed = discord.Embed(title="SkyBOT Uptime", description=f"{hours}시간 {minitues}분 {seconds}초 동안 봇이 **`구동중`** 상태입니다!", timestamp=message.created_at, 
+        embed = discord.Embed(title="SkyBOT Uptime", description=f"{hours}시간 {minitues}분 {seconds}초 동안 봇이 구동중입니다!", timestamp=message.created_at, 
         colour = discord.Colour.teal()
     )
         await message.channel.send(embed=embed)
@@ -706,7 +711,7 @@ async def on_message(message):
         colour = discord.Colour.green()
     )
         embed.add_field(name="개발 언어", value="Python", inline=False)
-        embed.add_field(name="개발 시작 일자", value="2020. 07. 24", inline=False)
+        embed.add_field(name="개발 시작 일자", value="2020. 07. 19", inline=False)
         embed.add_field(name="서버 수", value=str(server), inline=False)
         embed.add_field(name="유저 수", value=str(user),inline=False)
         await message.channel.send(embed=embed)
@@ -725,39 +730,6 @@ async def on_message(message):
         embed.add_field(name="결과", value=f"{randomlist[ran]}가 나왔습니다!")
         await message.channel.send(embed=embed)
 
-    if message.content.startswith("/배워"):
-        file = openpyxl.load_workbook('기억.xlsx')
-        sheet = file.active
-        learn = message.content.split(" ")
-        for i in range(1, 201):
-            if sheet["A"+str(i)].value == "-":
-                sheet["A" + str(i)].value = learn[1]
-                sheet["B" + str(i)].value = learn[2]
-                await message.channel.send("정상적으로 배웠어요!")
-                await message.channel.send("★ 현재 사용중인 데이터 저장용량 : " + str(i)+" / 200 ★")
-                break
-        file.save("기억.xlsx")
-
-
-    if message.content.startswith("/말해"):
-        file = openpyxl.load_workbook("기억.xlsx")
-        sheet = file.active
-        memory = message.content.split(" ")
-        for i in range(1, 201):
-            if sheet["A" + str(i)].value == memory[1]:
-                await message.channel.send(sheet["B" + str(i)].value)
-                break
-
-    if message.content.startswith("/기억 초기화") or message.content.startswith("/기억초기화"):
-        if message.author.id in owner:
-            file = openpyxl.load_workbook("기억.xlsx")
-            sheet = file.active
-            for i in range(1, 201):
-                sheet["A"+str(i)].value = "-"
-            await message.channel.send("기억초기화 완료!")
-            file.save("기억.xlsx")
-        else:
-            await message.channel.send("Owner 등급이 아닙니다.")
 
     if message.content.startswith("/날씨"):
         learn = message.content.split(" ")
@@ -877,5 +849,43 @@ async def on_message(message):
             colour=discord.Color.red()
         )
         await message.channel.send(embed=embed)
+
+    if message.content.startswith(f'/봇현황'):
+        if message.author.id in owner:
+            embed = discord.Embed(title="SkyBOT", description=f"{len(client.guilds)}개의 서버에 있습니다. {len(client.users)}명의 이용자와 함께합니다.", color=0xe38f4e)
+            value = ""
+            for guild in client.guilds:
+                value += f"{guild.name}\n"
+            embed.add_field(name="저는 어느 서버에 있을까요?", value=value)
+            await message.channel.send(f"{message.author.mention} DM으로 전송해 드렸어요!")
+            await message.author.send(embed=embed)
+        else:
+            await message.channel.send("해당 명령어는 Owner 등급 이상만 사용 가능합니다.")
+
+# 관리 명령어
+
+    if message.content.startswith('/경고'):
+        author = message.guild.get_member(int(message.content[6:24]))
+        file = openpyxl.load_workbook('경고.xlsx')
+        sheet = file.active
+        i = 1
+        while True:
+            if sheet["A" + str(i)].value == str(author.id):
+                sheet["B" + str(i)].value = int(sheet["B" + str(i)].value) + 1
+                file.save('경고.xlsx')
+                if sheet["B" + str(i)].value == 10:
+                    await message.guild.ban(author)
+                    await message.channel.send("경고가 10회 누적되어 해당 유저가 차단되었습니다.")
+                else:
+                    await message.channel.send(f"서버 관리자에 의해" + str(author.mention) + "님에게 경고 1을 부여했습니다.")
+                break
+            if sheet["A" + str(i)].value == None:
+                sheet["A" + str(i)].value = str(author.id)
+                sheet["B" + str(i)].value = 1
+                file.save("경고.xlsx")
+                await message.channel.send(f"서버 관리자에 의해" + str(author.mention) + "님에게 경고 1을 부여했습니다.")
+                break
+            i += 1
+
 
 client.run('Token')
