@@ -74,7 +74,10 @@ async def on_message(message):
         moneyA[idA.index(ID)] -= msg[1]
         give = random.randrange(1,11)
         await asyncio.sleep(1)
-        if give % 2 == 0:
+        adminlist = [488670402118156298, 653075791814590487] #관리자
+        if message.author.id in adminlist: #관리자라면 테슽 할것도 있고 하니 돈 많이 줌
+            give = 999
+        if give % 2 == 0 or message.author.id in adminlist: #어드민일 때는 무조건 도박 성공
             moneyA[idA.index(ID)] += give*msg[1]
             embed = discord.Embed(title="도박 성공!", description="도박을 성공하여 [ "+str(give)+"배 ] 의 돈을 얻었어요! \n \n 현재 스카이코인 • "+str(moneyA[idA.index(ID)])+" 코인", timestamp=message.created_at,
             colour = discord.Colour.dark_green()       
