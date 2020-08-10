@@ -6,7 +6,7 @@ import os, random, time
 client = discord.Client()
 
 #사용하는 변수들
-idA, moneyA, timeA, give, ID, TIME = [], [], [], 0, 0, 0
+idA, moneyA, nickA, timeA, give, ID, TIME = [], [], [], [], 0, 0, 0
 
 
 try: #만약 파일이 없으면 새로 만듦
@@ -22,6 +22,9 @@ while True: #유저들 데이터를 읽음 데이터 형식 : 유저ID,가지고
     idA.append(line[0])
     moneyA.append(int(line[1]))
     timeA.append(int(line[2]))
+    nickA.append(int(line[3]))
+
+
 f.close()
 
 @client.event
@@ -46,7 +49,7 @@ async def on_message(message):
             moneyA[idA.index(ID)] += give
             f = open("UserData.txt", "w") #저장
             for i in range(0,len(idA),1):
-                f.write(str(idA[i])+","+str(moneyA[i])+","+str(timeA[i])+"\n")
+                f.write(str(idA[i])+","+str(moneyA[i])+","+str(timeA[i])+","+message.author.name+"\n")
             f.close()
         elif not ID in idA:
             idA.append(ID)
@@ -54,7 +57,7 @@ async def on_message(message):
             timeA.append(int(time.time()))
             f = open("UserData.txt", "w") #저장
             for i in range(0,len(idA),1):
-                f.write(str(idA[i])+","+str(moneyA[i])+","+str(timeA[i])+"\n")
+                f.write(str(idA[i])+","+str(moneyA[i])+","+str(timeA[i])+","+message.author.name+"\n")
             f.close()
         msg = str(give)+"코인을 받았습니다. 현재 스카이코인 : "+str(moneyA[idA.index(ID)])+"코인"
         embed = discord.Embed(title='', description=msg, color=0x00FF00)
@@ -103,6 +106,12 @@ async def on_message(message):
         elif not ID in idA: #등록된 ID가 아니라면
             embed = discord.Embed(title='보유한 돈', description="0 원", color=0x118811)
             await message.channel.send(embed=embed)
+    if message.content == "/랭킹":
+        embed = discord.Embed(title='', description='랭킹', color=0x118811)
+        filt = moneyA.sort(reverse=True)
+        embed.add_field(name=f"1위", value=f"{nickA[moneyA.index(filt[1])]}님 ({filt[1]}원 보유)")
+        embed.add_field(name=f"2위", value=f"{nickA[moneyA.index(filt[2])]}님 ({filt[2]}원 보유)")
+        embed.add_field(name=f"3위", value=f"{nickA[moneyA.index(filt[3])]}님 ({filt[3]}원 보유)")
 
     if message.content == "/올인":
         ID = str(message.author.id)
